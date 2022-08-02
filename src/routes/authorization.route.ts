@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import ForbiddenError from '../models/errors/forbidden.error.model';
-import userRepository from '../repositories/user.repository';
-import JWT from 'jsonwebtoken';
 import { StatusCodes } from 'http-status-codes';
+import JWT from 'jsonwebtoken';
 import basicAuthenticationMiddleware from '../middlewares/basic-authenticaton.middleware';
+import jwtAuthenticationMiddleware from '../middlewares/jwt-authentication.middleware';
+import ForbiddenError from '../models/errors/forbidden.error.model';
 
 const authorizationRoute = Router();
 
@@ -28,6 +28,14 @@ authorizationRoute.post(
     } catch (error) {
       next(error);
     }
+  }
+);
+
+authorizationRoute.post(
+  '/token/validate',
+  jwtAuthenticationMiddleware,
+  (req: Request, res: Response, next: NextFunction) => {
+    res.sendStatus(StatusCodes.OK);
   }
 );
 
