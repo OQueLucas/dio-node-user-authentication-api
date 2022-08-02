@@ -42,6 +42,31 @@ class UserRepository {
     const [newUser] = rows;
     return newUser.uuid;
   }
+
+  async update(user: User): Promise<void> {
+    const script = `
+      UPDATE application_user
+      SET 
+        username = $1,
+        password = crypt($2, 'mysalt')
+      WHERE uuid = $3
+    `;
+
+    const values = [user.userName, user.password, user.uuid];
+
+    await db.query(script, values);
+  }
+
+  async remove(uuid: string): Promise<void> {
+    const script = `
+      DELETE 
+      FROM application_user
+      WHERE uuid = $1
+    `;
+    const values = [uuid];
+
+    await db.query(script, values);
+  }
 }
 
 export default new UserRepository();
