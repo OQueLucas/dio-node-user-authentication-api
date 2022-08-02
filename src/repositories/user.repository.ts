@@ -5,7 +5,7 @@ import User from '../models/user.model';
 class UserRepository {
   async findAllUsers(): Promise<User[]> {
     const query = `
-      SELECT uuid, userName 
+      SELECT uuid, username 
       FROM application_user
     `;
 
@@ -16,7 +16,7 @@ class UserRepository {
   async findById(uuid: string): Promise<User> {
     try {
       const query = `
-        SELECT uuid, userName 
+        SELECT uuid, username 
         FROM application_user
         WHERE uuid = $1
       `;
@@ -64,7 +64,7 @@ class UserRepository {
       RETURNING uuid
     `;
 
-    const values = [user.userName, user.password];
+    const values = [user.username, user.password];
 
     const { rows } = await db.query<{ uuid: string }>(script, values);
     const [newUser] = rows;
@@ -80,7 +80,7 @@ class UserRepository {
       WHERE uuid = $3
     `;
 
-    const values = [user.userName, user.password, user.uuid];
+    const values = [user.username, user.password, user.uuid];
 
     await db.query(script, values);
   }
